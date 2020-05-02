@@ -1,0 +1,20 @@
+server:
+  port: 10000
+spring:
+  application:
+    name: tcp-zuul  #zuul网关的名称
+
+#配置路由：指定路由到哪个微服务，可以配置多个
+zuul:
+  routes:
+    service-client: /service-client/**
+    customer-client: /customer-client/**
+    #这种配置的含义是：直接将微服务的名称作为路由的名称；凡是以/service-client/**开始的路径都会被路由到服务Id为“service-client”的这个微服务中去
+  prefix: /api   #prefix属性表示路由的前缀，凡是通过网关的方法都需要加上该前缀，如果没有通过网关，则不需要加前缀，表示是服务内部之间的调用，这样易于区分
+
+
+#将zuul网关注册进eureka中，这样zuul网关才能够获取服务列表，然后进行路由分配
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
